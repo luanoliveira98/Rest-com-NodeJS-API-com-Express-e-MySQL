@@ -4,6 +4,7 @@
   "description": "*Plataforma:* Alura *Carga Horária:* 8h *Atualizado Em:* 26/02/2020 *Iniciado Em:* 01/03/2021 *Finalizado Em:*",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/luanoliveira98/Rest-com-NodeJS-API-com-Express-e-MySQL/issues"
   },
-  "homepage": "https://github.com/luanoliveira98/Rest-com-NodeJS-API-com-Express-e-MySQL#readme"
+  "homepage": "https://github.com/luanoliveira98/Rest-com-NodeJS-API-com-Express-e-MySQL#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
 }
