@@ -8,7 +8,7 @@ class Atendimento {
         const data = moment(atendimento.data, 'DD/MM/YYYY').format('YYYY-MM-DD HH:MM:SS')
         
         // Validando dados da requisição
-        const dataEhValida = moment(data).isSameOrAfter(dataCriacao)
+        const dataEhValida = moment(data).isSameOrAfter(dataCriacao, 'day')
         const clienteEhValido = atendimento.cliente.length >= 4
 
         // Criando array de validações
@@ -42,7 +42,7 @@ class Atendimento {
                 if(erro){
                     res.status(400).json(erro)
                 } else {
-                    res.status(201).json(resultado)
+                    res.status(201).json(atendimento)
                 }
             })
         }        
@@ -69,6 +69,34 @@ class Atendimento {
                 res.status(400).json(erro)
             } else {
                 res.status(200).json(atendimento)
+            }
+        })
+    }
+
+    altera(id, valores, res) {
+        if(valores.data) {
+            valores.data = moment(valores.data, 'DD/MM/YYYY').format('YYYY-MM-DD HH:MM:SS')
+        }
+
+        const sql = 'UPDATE Atendimentos SET ? WHERE id = ?'
+
+        conexao.query(sql, [valores, id], (erro, resultados) => {
+            if(erro) {
+                res.status(400).json(erro)
+            } else {
+                res.status(200).json({...valores, id})
+            }
+        })
+    }
+
+    deleta(id, res) {
+        const sql = "DELETE FROM Atendimentos where id = ? "
+
+        conexao.query(sql, id, (erro, resultados) => {
+            if(erro) {
+                res.status(400).json(erro)
+            } else {
+                res.status(200).json({id})
             }
         })
     }
