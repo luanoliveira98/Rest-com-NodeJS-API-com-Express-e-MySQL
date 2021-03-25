@@ -4,31 +4,44 @@ const axios = require('axios')
 const repositorio = require('../repositorios/atendimentos')
 
 class Atendimento {
-    adiciona(atendimento) {
-        // Formatando datas com moment
-        const dataCriacao = moment().format('YYYY-MM-DD HH:MM:SS')
-        const data = moment(atendimento.data, 'DD/MM/YYYY').format('YYYY-MM-DD HH:MM:SS')
-        
+    constructor() {
         // Validando dados da requisição
-        const dataEhValida = moment(data).isSameOrAfter(dataCriacao, 'day')
-        const clienteEhValido = atendimento.cliente.length >= 4
+        this.dataEhValida = ({data, dataCriacao}) => moment(data).isSameOrAfter(dataCriacao)
+        this.clienteEhValido = ({tamanho}) => tamanho >= 4
 
-        // Criando array de validações
-        const validacoes = [
+        // Função de validação
+        this.valida = parametros => this.validacoes.filter(campo => {
+            const { nome } = campo
+            const parametro = parametros[nome]
+
+            return !campo.valido(parametro)
+        })
+
+         // Criando array de validações
+         this.validacoes = [
             {
                 nome: 'data',
-                valido: dataEhValida,
+                valido: this.dataEhValida,
                 mensagem: 'Data deve ser maior ou igual da data atual'
             },
             {
                 nome: 'cliente',
-                valido: clienteEhValido,
+                valido: this.clienteEhValido,
                 mensagem: 'Cliente deve ter pelo menos quatro caracteres'
             }
         ]
+    }
 
-        // Captura erros
-        const erros = validacoes.filter(campo => !campo.valido)
+    adiciona(atendimento) {
+        // Formatando datas com moment
+        const dataCriacao = moment().format('YYYY-MM-DD HH:MM:SS')
+        const data = moment(atendimento.data, 'DD/MM/YYYY').format('YYYY-MM-DD HH:MM:SS')
+        const parametros = {
+            data: { data, dataCriacao },
+            cliente: { tamanho: atendimento.cliente.length }
+        }
+
+        const erros = this.valida(parametros)
         const existemErros = erros.length
         
         // Verifica se existem erros
