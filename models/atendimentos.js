@@ -1,5 +1,5 @@
 const moment = require('moment')
-const conexao = require ('../infraestrutura/conexao')
+const conexao = require ('../infraestrutura/database/conexao')
 const axios = require('axios')
 
 class Atendimento {
@@ -43,7 +43,8 @@ class Atendimento {
                 if(erro){
                     res.status(400).json(erro)
                 } else {
-                    res.status(201).json(atendimento)
+                    const id = resultado.insertId
+                    res.status(201).json({ ...atendimento, id })
                 }
             })
         }        
