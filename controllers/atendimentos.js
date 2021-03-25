@@ -3,12 +3,14 @@ const Atendimento = require('../models/atendimentos')
 module.exports = app => {
     app.get('/atendimentos', (req, res) => {
         Atendimento.lista(res)
+            .then(resultados => res.json(resultados))
+            .catch(erros => res.status(400).json(erros))
     })
     
     app.get('/atendimentos/:id', (req, res) => {
         const id = parseInt(req.params.id)
 
-        Atendimento.buscaPorId(id, res)
+        Atendimento.buscaPorId(id)
     })
 
     app.post('/atendimentos', (req, res) => {
